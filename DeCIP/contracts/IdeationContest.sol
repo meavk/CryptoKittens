@@ -1,5 +1,7 @@
 pragma solidity ^0.5.0;
 
+import './Idea.sol';
+
 contract IdeationContest
 {
     enum StateType { 
@@ -8,58 +10,37 @@ contract IdeationContest
       VotingComplete
     }
 
+    event IdeaAdded(string _message);
+
     address public InstanceOwner;
     string public Description;
     string public Name;
     StateType public State;
-    mapping (address => int) balanceVotes;
+    mapping (address => uint) balanceVotes;
+    uint public TotalIdeas;
+    Idea[] public Ideas;
 
-    constructor(string memory description, string memory name) public
+    constructor(string memory name, string memory description) public
     {
         InstanceOwner = msg.sender;
         Description = description;
         Name = name;
         State = StateType.SubmissionOpen;
+        TotalIdeas = 0;
     }
 
     function SubmitIdea(string memory name) public {
-        
-    }
-}
-
-contract Idea
-{
-    address public InstanceOwner;
-    address public IdeaOwner;
-    string public Name;
-    string public PresentationLink;
-    int private votes;
-
-    constructor(string memory name, address ideaOwner) public
-    {
-        Name = name;
-        votes = 0;
-        InstanceOwner = msg.sender;
-        IdeaOwner = ideaOwner;
+        Idea newIdea = new Idea(name, msg.sender);
+        Ideas.push(newIdea);
+        TotalIdeas++;
     }
 
-    function AddLink(string memory link) public
-    {
-        if(IdeaOwner != msg.sender)
-        {
-            revert();
-        }
-
-        PresentationLink = link;
+    function getIdeas() external view returns (Idea[] memory) {
+        return Ideas;
     }
 
-    function Vote() public 
-    {
-        if(InstanceOwner != msg.sender)
-        {
-            revert();
-        }
-
-        votes++;
+    function getIdeaDetails(address ideaAddress) external pure returns (Idea) {
+        Idea idea = Idea(ideaAddress);
+        return idea;
     }
 }
