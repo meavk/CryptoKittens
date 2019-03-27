@@ -6,7 +6,7 @@ contract Idea
     address public IdeaOwner;
     string public Name;
     string public PresentationLink;
-    int private votes;
+    uint private votes;
 
     constructor(string memory name, address ideaOwner) public payable
     {
@@ -34,5 +34,9 @@ contract Idea
         }
 
         votes++;
+    }
+
+    function getVotes() external view returns (uint){
+        return votes;
     }
 }

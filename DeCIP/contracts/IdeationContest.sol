@@ -16,7 +16,7 @@ contract IdeationContest
     string public Description;
     string public Name;
     StateType public State;
-    mapping (address => uint) balanceVotes;
+    mapping (address => uint) votesUsed;
     uint public TotalIdeas;
     Idea[] public Ideas;
 
@@ -35,12 +35,33 @@ contract IdeationContest
         TotalIdeas++;
     }
 
+    function VoteForIdea(address ideaAddress) public {
+        Idea idea = Idea(ideaAddress);
+
+        if(votesUsed[msg.sender] >= 1)
+        {
+            revert();
+        }
+
+        votesUsed[msg.sender] = 1;
+        idea.Vote();
+    }
+
     function getIdeas() external view returns (Idea[] memory) {
         return Ideas;
     }
 
     function getIdeaDetails(address ideaAddress) external pure returns (Idea) {
-        Idea idea = Idea(ideaAddress);
-        return idea;
+        return Idea(ideaAddress);
+    }
+
+    function getTotalVotes() external view returns (uint)
+    {
+        uint totalVotes = 0;
+        for (uint index = 0; index < Ideas.length; index++) {
+            totalVotes = totalVotes + Ideas[index].getVotes();
+        }
+
+        return totalVotes;
     }
 }

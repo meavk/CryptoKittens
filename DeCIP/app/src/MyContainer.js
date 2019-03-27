@@ -4,9 +4,9 @@ import { drizzleConnect } from "drizzle-react";
 const mapStateToProps = state => {
   return {
     accounts: state.accounts,
+    IdeationContest: state.contracts.IdeationContest,
     SimpleStorage: state.contracts.SimpleStorage,
     TutorialToken: state.contracts.TutorialToken,
-    IdeationContest: state.contracts.IdeationContest,
     drizzleStatus: state.drizzleStatus,
   };
 };
